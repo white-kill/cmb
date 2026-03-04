@@ -63,6 +63,7 @@
               <view class="title" v-if="activeTitle === 1">
                 <text class="title-txt">{{ convertMonth(item.month) }}</text>
                 <text>月</text>
+                <text v-if="item.year != currentYear" class="title-year">{{ `/${item.year}` }}</text>
               </view>
               <view
                 class="analysis-btn"
@@ -126,6 +127,7 @@
               <view class="title">
                 <text class="title-txt">{{ convertMonth(item.month) }}</text>
                 <text>月</text>
+                <text v-if="item.year != currentYear" class="title-year">{{ `/${item.year}` }}</text>
               </view>
               <view class="analysis-btn" @click="goAnalysis(item)">分析</view>
               <view class="summary">
@@ -255,6 +257,7 @@
                 convertMonth(item.month)
               }}</text>
               <text class="bill-empty-left-2">月</text>
+              <text v-if="item.year != currentYear" class="title-year">{{ `/${item.year}` }}</text>
             </view>
             <view class="bill-empty-right"> 暂无交易 </view>
           </view>
@@ -298,7 +301,6 @@
 import { mapState } from "vuex";
 import { getBillPage, getBillPageRangePayment } from "@/api/index.js";
 import {
-  repeatCardNumber,
   formatAmount,
   navigateTo,
   redirectTo,
@@ -380,7 +382,7 @@ export default {
                 this.$set(
                   this.selectDate,
                   "text",
-                  `${item.year}.${ item.month < 10 ? '0'+item.month:item.month}`
+                  `${item.year}.${item.month < 10 ? "0" + item.month : item.month}`,
                 );
               }
             })
@@ -434,6 +436,11 @@ export default {
         }
       };
     },
+    // 当前年份
+    currentYear() {
+      const nowDate = new Date();
+      return nowDate.getFullYear();
+    }
   },
   onLoad() {
     const currentDate = new Date();
@@ -677,6 +684,7 @@ export default {
         color: #000000;
         font-weight: 700;
         display: flex;
+        position: relative;
 
         .bill-empty-left-1 {
           font-size: 56rpx;
@@ -684,7 +692,7 @@ export default {
 
         .bill-empty-left-2 {
           font-size: 36rpx;
-          margin-top: 30rpx;
+          margin-top: 20rpx;
         }
       }
     }
@@ -885,6 +893,14 @@ export default {
       }
     }
   }
+}
+
+.title-year {
+  position: absolute;
+  font-size: 24rpx;
+  bottom: 10rpx;
+  left: calc(100% + 5rpx);
+  font-weight: normal;
 }
 
 .add-btn {

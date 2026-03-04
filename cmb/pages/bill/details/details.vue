@@ -17,6 +17,10 @@
               mode=""
             ></image>
           </view>
+          <view class="info-balance">
+            <text>余额</text>
+            <text>{{ accountBalanceStr }}</text>
+          </view>
         </view>
         <view class="cell">
           <view class="label">交易卡号</view>
@@ -157,6 +161,14 @@ export default {
   computed: {
     momneyStr() {
       let num = parseFloat(this.details.amount);
+      if (num > 0) {
+        return `￥${formatAmount(num.toFixed(2))}`;
+      } else {
+        return `-￥${formatAmount(Math.abs(num).toFixed(2))}`;
+      }
+    },
+    accountBalanceStr() {
+      let num = parseFloat(this.details.accountBalance);
       if (num > 0) {
         return `￥${formatAmount(num.toFixed(2))}`;
       } else {
@@ -369,6 +381,15 @@ export default {
           height: 30rpx;
           margin-left: 6rpx;
         }
+      }
+
+      .info-balance {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #999999;
+        font-size: 26rpx;
+        margin-top: 36rpx;
       }
     }
   }

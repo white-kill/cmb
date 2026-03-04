@@ -35,12 +35,12 @@
 								{{item.oppositeName}}
 							</view>
 							<view class="info-time">
-								{{item.transactionTime}}
+								{{ formatTransactionTime(item)}}
 							</view>
 						</view>
 						<view class="money">
 							<view class="money-title">
-								-￥{{item.amount}}
+								-￥{{ formatAmount(item.amount.toFixed(2))}}
 							</view>
 							<view class="info-status">
 								{{item.status}}
@@ -64,12 +64,14 @@
 	import {
 		getTransferRecord
 	} from '@/api/index.js'
-	import {
-		navigateTo
-	} from '../../../utils';
+  import {
+  formatAmount,
+  navigateTo,
+} from "@/utils/index.js";
 	export default {
 		data() {
 			return {
+        formatAmount: formatAmount,
 				empty: false,
 				bankPopShow: false,
 				timePopShow: false,
@@ -100,11 +102,26 @@
 			...mapState(['statusBarHeight', 'navBarHeight']),
       currentMonth() {
         const nowDate = new Date();
-        const currentMonth = nowDate.getMonth() + 1;
+        let currentMonth = nowDate.getMonth() + 1;
+        currentMonth = currentMonth < 10 ? '0' + currentMonth : currentMonth;
         return `${currentMonth}月`;
       }
 		},
 		methods: {
+      formatTransactionTime(data) {
+        const nowDate = new Date();
+        let currentMonth = nowDate.getMonth() + 1;
+        currentMonth = currentMonth < 10 ? '0' + currentMonth : currentMonth;
+        let currentDay = nowDate.getDate();
+        currentDay = currentDay < 10 ? '0' + currentDay : currentDay;
+        const showDateStr = `${currentMonth}.${currentDay}`;
+        console.log(showDateStr, data.transactionTime);
+        if(data.transactionTime.startsWith(showDateStr)) {
+          return `今天 ${data.transactionTime.split(' ')[1]}`;
+        }else{
+          return data.transactionTime;
+        }
+      },
 			openBankPop() {
 				this.bankPopShow = !this.bankPopShow;
 			},

@@ -18,7 +18,7 @@
 							<text class="bank-name">{{contactsInfo.bankName}}</text>
 						</view>
 						<view class="info-number">
-							{{contactsInfo.bankCard}}
+							{{ formatCardNumber(contactsInfo.bankCard)}}
 						</view>
 					</view>
 				</view>
@@ -110,7 +110,7 @@
 						return decimal ? `${formattedInteger}.${decimal}` : formattedInteger;
 					}
 				}
-			}
+			},
 		},
 		methods: {
 			transferRemarkcConfirm(e) {
@@ -128,7 +128,19 @@
 				navigateTo({
 					url: '/pages/transfer/record/record'
 				})
-			}
+			},
+      formatCardNumber(cardNumber) {
+        if(!cardNumber) return '';
+        const list = [];
+        for(let i = 0; i < cardNumber.length; i++) {
+          const char = cardNumber.substr(i, 1);
+          list.push(char);
+          if ((i + 1) % 4 === 0) {
+            list.push(' ');
+          }
+        }
+        return list.join('');
+      }
 		}
 	}
 </script>
