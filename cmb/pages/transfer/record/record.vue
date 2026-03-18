@@ -11,7 +11,7 @@
 							mode=""></image>
 					</view>
 					<view :class="['item',timePopShow?'active':'']" @click="openTimePop">
-						<view class="name">{{selectDate.text}}</view>
+						<view class="name">{{selectDateText}}</view>
 						<image class="icon" :src="timePopShow?'/static/icon/blueUp.png':'/static/icon/greyDown.png'"
 							mode=""></image>
 					</view>
@@ -90,6 +90,7 @@
 				},
 				keyword: '',
 				oppositeAccount:'', // 对方账户
+        dataDay: '',
 			};
 		},
 		onLoad(options) {
@@ -105,6 +106,18 @@
         let currentMonth = nowDate.getMonth() + 1;
         currentMonth = currentMonth < 10 ? '0' + currentMonth : currentMonth;
         return `${currentMonth}月`;
+      },
+      selectDateText() {
+        if(this.selectDate.text == '近三个月') {
+          return '最近3个月';
+        }
+        if(this.selectDate.text == '近半年') {
+          return '最近半年';
+        }
+        if(this.selectDate.text == '近一年') {
+          return '最近1年';
+        }
+        return this.selectDate.text;
       }
 		},
 		methods: {
@@ -115,7 +128,6 @@
         let currentDay = nowDate.getDate();
         currentDay = currentDay < 10 ? '0' + currentDay : currentDay;
         const showDateStr = `${currentMonth}.${currentDay}`;
-        console.log(showDateStr, data.transactionTime);
         if(data.transactionTime.startsWith(showDateStr)) {
           return `今天 ${data.transactionTime.split(' ')[1]}`;
         }else{
@@ -154,6 +166,17 @@
 					oppositeAccount: this.oppositeAccount
 				}).then((res) => {
 					if (res.code === 200) {
+            res.data.list.forEach((item, index) => {
+              if(index == 0 && this.pageNum == 1) {
+                this.dataDay = item.day;
+              }else{
+                if(item.day != '' && item.day != this.dataDay) {
+                  this.dataDay = item.day;
+                }else{
+                  item.day = '';
+                }
+              }
+            });
 						this.list = [...this.list, ...res.data.list]
 						this.totalPage = res.data.pages
 						if (this.totalPage == 1) {

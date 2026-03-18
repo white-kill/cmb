@@ -536,7 +536,11 @@ export default {
             }
           }
           if (!this.scrollIntoView) {
-            this.scrollIntoView = trendList[trendList.length - 1].dateTime;
+            this.$nextTick(() => {
+              this.scrollIntoView = trendList[trendList.length - 1].dateTime;
+            })
+            // this.scrollIntoView = trendList[trendList.length - 1].dateTime;
+            console.log(this.scrollIntoView, 'scrollIntoView');
           }
         }
       });

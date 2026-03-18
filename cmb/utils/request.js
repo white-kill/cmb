@@ -13,8 +13,9 @@ const options = {
 		'content-type': 'application/json',
 		'Access-Control-Allow-Origin':'*',
 	},
-	// baseUrl: 'http://api.chinajianse.com',
-	baseUrl: '/api',
+	baseUrl: 'http://api.chinajianse.com',
+	// baseUrl: '/api',
+	// baseUrl: 'http://47.102.135.129:8001',
 	// 新增：重试配置
 	retry: {
 		count: 2, // 重试次数

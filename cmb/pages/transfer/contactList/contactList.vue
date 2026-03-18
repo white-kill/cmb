@@ -25,14 +25,14 @@
 				<text>添加新伙伴</text>
 			</view>
 			<view class="list">
-				<view class="item" @click="isMoreList = !isMoreList">
+				<!-- <view class="item" @click="isMoreList = !isMoreList">
 					<image class="user-icon" src="/static/transfer/user-icon.png" mode=""></image>
 					<view class="user-name">{{userInfo.realName}}</view>
 					<view class="user-num">{{ userInfo.bankList.length }}</view>
 					<image :class="['user-arrow',!isMoreList?'user-arrow-acitive':'']" src="/static/icon/arrow-top.png"
 						mode="">
 					</image>
-				</view>
+				</view> -->
         <view style="padding-left: 98rpx;" v-if="isMoreList" class="item mine border" @click="mineShortcut(item)"
 						v-for="(item,index) in userInfo.bankList" :key="item.bankCard">
 						<image class="user-icon" src="http://img.chinajianse.com/bank/icon/CMB.png" mode=""></image>
@@ -98,7 +98,7 @@
 		},
 		onLoad(options) {
       if(options.mine) {
-        this.navTitle = '我的转账伙伴1'
+        this.navTitle = '我的转账伙伴'
       }
 			this.getContactsList()
 		},

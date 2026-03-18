@@ -63,7 +63,9 @@
               <view class="title" v-if="activeTitle === 1">
                 <text class="title-txt">{{ convertMonth(item.month) }}</text>
                 <text>月</text>
-                <text v-if="item.year != currentYear" class="title-year">{{ `/${item.year}` }}</text>
+                <text v-if="item.year != currentYear" class="title-year">{{
+                  `/${item.year}`
+                }}</text>
               </view>
               <view
                 class="analysis-btn"
@@ -127,7 +129,9 @@
               <view class="title">
                 <text class="title-txt">{{ convertMonth(item.month) }}</text>
                 <text>月</text>
-                <text v-if="item.year != currentYear" class="title-year">{{ `/${item.year}` }}</text>
+                <text v-if="item.year != currentYear" class="title-year">{{
+                  `/${item.year}`
+                }}</text>
               </view>
               <view class="analysis-btn" @click="goAnalysis(item)">分析</view>
               <view class="summary">
@@ -213,7 +217,7 @@
             @click="goDetails(item, item.icon)"
           >
             <view class="bill-time" v-if="item.day && orderSort == ''">
-              {{ item.day }}
+              {{ formatDay(item) }}
             </view>
             <u-swipe-action>
               <u-swipe-action-item
@@ -257,7 +261,9 @@
                 convertMonth(item.month)
               }}</text>
               <text class="bill-empty-left-2">月</text>
-              <text v-if="item.year != currentYear" class="title-year">{{ `/${item.year}` }}</text>
+              <text v-if="item.year != currentYear" class="title-year">{{
+                `/${item.year}`
+              }}</text>
             </view>
             <view class="bill-empty-right"> 暂无交易 </view>
           </view>
@@ -300,11 +306,7 @@
 <script>
 import { mapState } from "vuex";
 import { getBillPage, getBillPageRangePayment } from "@/api/index.js";
-import {
-  formatAmount,
-  navigateTo,
-  redirectTo,
-} from "@/utils/index.js";
+import { formatAmount, navigateTo, redirectTo } from "@/utils/index.js";
 export default {
   data() {
     return {
@@ -440,7 +442,7 @@ export default {
     currentYear() {
       const nowDate = new Date();
       return nowDate.getFullYear();
-    }
+    },
   },
   onLoad() {
     const currentDate = new Date();
@@ -466,6 +468,36 @@ export default {
     this.getBillPage();
   },
   methods: {
+    formatDay(item) {
+      if (this.isToday(item.transactionTime)) {
+        return `今天`;
+      } else if (this.isYesterday(item.transactionTime)) {
+        return `昨天`;
+      }
+      return item.day;
+    },
+    isToday(dateString) {
+      const today = new Date();
+      const targetDate = new Date(dateString);
+
+      // 清除时间部分，只比较日期
+      today.setHours(0, 0, 0, 0);
+      targetDate.setHours(0, 0, 0, 0);
+
+      return today.getTime() === targetDate.getTime();
+    },
+    isYesterday(dateString) {
+      const today = new Date();
+      const yesterday = new Date();
+      const targetDate = new Date(dateString);
+
+      // 设置时间为昨天
+      yesterday.setDate(today.getDate() - 1);
+      yesterday.setHours(0, 0, 0, 0); // 清除时间部分
+      targetDate.setHours(0, 0, 0, 0); // 清除时间部分
+
+      return yesterday.getTime() === targetDate.getTime();
+    },
     accountBook() {
       redirectTo({
         url: "/pages/bill/accountBook/accountBook",
@@ -581,6 +613,10 @@ export default {
       }
     },
     getBillPage() {
+      // 不管哪个接口，请求第一页这个字段就不要传
+      if(this.pageNum == 1) {
+        this.endPageTime = "";
+      }
       if (this.activeTitle == 1) {
         getBillPage({
           pageSize: this.pageSize,
@@ -591,6 +627,7 @@ export default {
           totalKeyList: this.totalKeyList,
           minAmount: this.minAmount,
           maxAmount: this.maxAmount,
+          endPageTime: this.endPageTime,
         })
           .then((res) => {
             if (res.code === 200) {
@@ -599,6 +636,10 @@ export default {
               this.totalKeyList = res.data.customizeParam.totalKeyList;
               this.queryTime = res.data.customizeParam.queryTime;
               this.pageNum = res.data.customizeParam.pageNum;
+              if (res.data.list.length > 0) {
+                this.endPageTime =
+                  res.data.list[res.data.list.length - 1].transactionTime;
+              }
               if (this.totalPage == 1) {
                 this.status = "nomore";
               } else {
