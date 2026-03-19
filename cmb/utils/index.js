@@ -149,8 +149,12 @@ const repeatCardNumber = (cardNumber) => {
 	let firstFour = cardNumber.substring(0, 4); // 提取前四位
 	let lastFour = cardNumber.substring(cardNumber.length - 4); // 提取后四位
 	let masked = '*'.repeat(cardNumber.length - 8); // 中间部分用 * 替代
-
-	return `${firstFour} ${masked} ${lastFour}`; // 返回格式化后的银行卡号
+  const formattedCardNumber = `${firstFour}${masked}${lastFour}`; // 拼接格式化后的银行卡号
+  const list = [];
+  for(let i = 0; i < formattedCardNumber.length; i += 4) {
+    list.push(formattedCardNumber.substring(i, i + 4));
+  }
+  return list.join(' '); // 返回格式化后的银行卡号
 }
 const formatAmount = (amount) => { //将数字格式化为每三位用逗号分隔：
 	if (amount === 0) {

@@ -17,7 +17,7 @@
     </view>
     <view class="cell">
      <view class="label">收款方账号</view>
-     <view class="content">{{info.oppositeAccount}}</view>
+     <view class="content">{{repeatCardNumber(info.oppositeAccount)}}</view>
     </view>
     <view class="cell">
      <view class="label">收款方银行</view>
@@ -25,7 +25,7 @@
     </view>
     <view class="cell">
      <view class="label">转账金额</view>
-     <view class="content">{{info.amount}}</view>
+     <view class="content">{{info.amount.toFixed(2)}}元</view>
     </view>
     <view class="cell">
      <view class="label">付款方户名</view>
@@ -33,7 +33,7 @@
     </view>
     <view class="cell">
      <view class="label">付款方账号</view>
-     <view class="content">{{info.bankCard}}</view>
+     <view class="content">{{repeatCardNumber(info.bankCard)}}</view>
     </view>
     <view class="cell">
      <view class="label">转账附言</view>
@@ -73,12 +73,14 @@
 </template>
 
 <script>
+ import { repeatCardNumber } from "@/utils/index.js";
  import {
   mapState
  } from 'vuex'
  export default {
   data() {
    return {
+    repeatCardNumber: repeatCardNumber,
     info: {},
     id: 1,
     tabs: [{

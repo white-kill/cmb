@@ -474,7 +474,8 @@ export default {
       } else if (this.isYesterday(item.transactionTime)) {
         return `昨天`;
       }
-      return item.day;
+      const date = new Date(item.transactionTime);
+      return `${date.getMonth() + 1}.${date.getDate()}`;
     },
     isToday(dateString) {
       const today = new Date();
