@@ -25,7 +25,7 @@
     </view>
     <view class="cell">
      <view class="label">转账金额</view>
-     <view class="content">{{info.amount.toFixed(2)}}元</view>
+     <view class="content">{{formatAmount(info.amount.toFixed(2))}}元</view>
     </view>
     <view class="cell">
      <view class="label">付款方户名</view>
@@ -73,7 +73,7 @@
 </template>
 
 <script>
- import { repeatCardNumber } from "@/utils/index.js";
+ import { repeatCardNumber, formatAmount } from "@/utils/index.js";
  import {
   mapState
  } from 'vuex'
@@ -81,6 +81,7 @@
   data() {
    return {
     repeatCardNumber: repeatCardNumber,
+    formatAmount: formatAmount,
     info: {},
     id: 1,
     tabs: [{
